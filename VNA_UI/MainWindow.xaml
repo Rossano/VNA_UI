@@ -1,0 +1,64 @@
+﻿<Window x:Class="VNA_GUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dg="http://schemas.microsoft.com/wpf/2008/toolkit"
+        xmlns:extToolkit="clr-namespace:Xceed.Wpf.Toolkit;assembly=WPFToolkit.Extended"        
+        xmlns:zed="clr-namespace:ZedGraph;assembly=ZedGraph"
+        xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        Title="VNA Measurement Data Reader" Height="500" Width="650"
+        SizeChanged="Window_SizeChanged" Loaded="Window_Loaded">
+    <Grid>
+        <!-- Main Grid-->
+                <StackPanel Orientation="Horizontal">     
+                        <!-- All Window Controls are here in this StackPanel-->
+                        <StackPanel Orientation="Vertical">
+                                <extToolkit:DecimalUpDown Name="GpibAddress" Increment="1" Minimum="0" Maximum="255"
+                                        Watermark="Enter GPIB Address" Margin="5,10,5,10" MaxWidth="125"/>
+                                <Label>Measurement Point Numbers</Label>
+                                <Slider Orientation="Horizontal" Height="25" Name="points" IsSnapToTickEnabled="True" 
+                                        MinWidth="150" Minimum="3" Maximum="1601" 
+                                        Ticks="3,11,21,26,51,101,201,401,801,1601" Value="201" />
+                                <StackPanel Orientation="Horizontal">
+                                        <TextBlock Margin="5" Text="{Binding ElementName=points, Path=Minimum}" />
+                                        <TextBlock Margin="5" Text="{Binding ElementName=points, Path=Value}" MinWidth="100" TextAlignment="Center"/>
+                                        <TextBlock Margin="5" Text="{Binding ElementName=points, Path=Maximum}" />
+                                </StackPanel>
+                                <Button Name="connect_button" Margin="5,10,5,10" Click="connect_button_Click" />
+                                <Button Name="data2clip_button" Margin="5,10,5,10" Click="data2clip_button_Click">
+                                        Save Data to Clipboard
+                                </Button>
+                                <Button Name="data2Xls_button" Margin="5,10,5,10" Click="data2Xls_button_Click">
+                                        Save Data to Excel
+                                </Button>
+                                <CheckBox Name="logX_checkBox" IsChecked="False" Margin="5,10,5,10">
+                                        Logaritmic X axis
+                                </CheckBox>
+                        </StackPanel>
+                        <TabControl Height="Auto" Width="Auto" Name="GridTab">
+                                <TabItem Header="Measured Data" Width="Auto" GotFocus="GridTab_GotFocus">
+                                        <!-- DataGrid to show measurement data-->
+                                        <!--<DataGrid Name="data" ItemsSource="{Binding Source=MeasData}" />-->
+                                        <TextBox Name="dataBox" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
+                                </TabItem>
+                                <TabItem Header="Data Plot" Width="Auto" Name="PlotTab" GotFocus="PlotTab_GotFocus">
+                                        <StackPanel Orientation="Vertical">
+                                                <Border BorderThickness="2" BorderBrush="PowderBlue" Height="Auto" Width="Auto">
+                                                        <WindowsFormsHost MinHeight="400" MinWidth="400" Name="ZedGraphHost">
+                                                                <zed:ZedGraphControl x:Name="dataGraph" />
+                                                        </WindowsFormsHost>                                                        
+                                                </Border>
+                                                <StackPanel Orientation="Horizontal">
+                                                        <CheckBox Name="X_log_CheckBox" IsChecked="{Binding ElementName=logX_checkBox, Path=IsChecked}">
+                                                                X Axis Logaritmic
+                                                        </CheckBox>
+                                                        <CheckBox Name="Y_log_CheckBox" IsChecked="False">
+                                                                Y Axis Logaritmic
+                                                        </CheckBox>
+                                                </StackPanel>
+                                        </StackPanel>
+                                </TabItem>
+                        </TabControl>
+                        
+                </StackPanel>
+     </Grid>
+</Window>
